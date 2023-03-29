@@ -149,7 +149,7 @@ public class Scanner {
                         estado = 2;
                         buffer.append(flujo);
                     }
-                    // Estado de aceptación, pero no está declarado explícitamente
+                    // Estado de aceptación//
                     else {
                         estado = 0;
                         i--;
@@ -157,7 +157,7 @@ public class Scanner {
                     }
                 break;
                 
-                // Estos son estados de aceptación, debemos hacer lo mismo en todos.
+                // Estos son estados de aceptación//
                 case 2: case 6: case 8: case 11:
                     estado = 0;
                     i--;
