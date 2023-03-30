@@ -64,8 +64,18 @@ public class Scanner {
         TokensConLexema.put("*=", Tipo_Token.POR_IGUAL);
         TokensConLexema.put("/", Tipo_Token.DIVISION);
         TokensConLexema.put("/=", Tipo_Token.DIV_IGUAL);
-        TokensConLexema.put("[a-zA-Z]", Tipo_Token.CADENA);
-        
+        TokensConLexema.put("{", Tipo_Token.LLAVE_IZQ);
+        TokensConLexema.put("}", Tipo_Token.LLAVE_DER);
+        TokensConLexema.put("(", Tipo_Token.PARENTESIS_IZQ);
+        TokensConLexema.put(")", Tipo_Token.PARENTESIS_DER);
+        TokensConLexema.put("&&", Tipo_Token.Y);
+        TokensConLexema.put("||", Tipo_Token.O);
+        TokensConLexema.put("&", Tipo_Token.AMPERSAND);
+        TokensConLexema.put(",", Tipo_Token.COMA);
+        TokensConLexema.put(".", Tipo_Token.PUNTO);
+        TokensConLexema.put(";", Tipo_Token.PUNTO_Y_COMA);
+        TokensConLexema.put("[", Tipo_Token.CORCHETE_IZQ);
+        TokensConLexema.put("]", Tipo_Token.CORCHETE_DER);
     }
 
     Scanner(String source){
@@ -105,31 +115,31 @@ public class Scanner {
                        buffer.append(flujo);
                     }
                     else if (validarTrans(flujo, "\\+")) {
-                       estado = 12;
+                       estado = 30;
                        buffer.append(flujo);
                     }
                     else if (validarTrans(flujo, "-")) {
-                       estado = 13;
+                       estado = 33;
                        buffer.append(flujo);
                     }
                     else if (validarTrans(flujo, "\\*")) {
-                       estado = 14;
+                       estado = 35;
                        buffer.append(flujo);
                     }
-                    else if (validarTrans(flujo, "/")) {
-                       estado = 15;
+                    else if (validarTrans(flujo, "\\/")) {
+                       estado = 38;
                        buffer.append(flujo);
                     }
-                    else if (validarTrans(flujo, "[^\\n]")) {
-                       estado = 28;
+                    else if (validarTrans(flujo, "//|")) {
+                       estado = 40;
                        buffer.append(flujo);
                     }
-                    else if (validarTrans(flujo, "\\d")) {
-                       estado = 20;
+                    else if (validarTrans(flujo, "//&")) {
+                       estado = 43;
                        buffer.append(flujo);
                     }
                     else if (validarTrans(flujo, ".")) {
-                       estado = 21;
+                       estado = 24;
                        buffer.append(flujo);
                     }
                     else if (validarTrans(flujo, "\\d")) {
@@ -137,11 +147,21 @@ public class Scanner {
                        buffer.append(flujo);
                     }
                     else if (validarTrans(flujo, "[a-zA-Z]")) {
-                       estado = 25;
+                       estado = 26;
                        buffer.append(flujo);
                     }
-                    
-                    
+                    else if (validarTrans(flujo, "\\\\(|\\\\)|\\\\{|\\\\}|[|]")) {
+                       estado = 18;
+                       buffer.append(flujo);
+                    }
+                    else if (validarTrans(flujo, ".|\\\\;|\\\\,|\\\\?|\\\\¿|\\\\%|\\\\_")) {
+                       estado = 20;
+                       buffer.append(flujo);
+                    }
+                    else if (validarTrans(flujo, "\\s")) {
+                       estado = 28;
+                       buffer.append(flujo);
+                    }
                 break;
                 
                 case 1:
@@ -149,7 +169,6 @@ public class Scanner {
                         estado = 2;
                         buffer.append(flujo);
                     }
-                    // Estado de aceptación//
                     else {
                         estado = 0;
                         i--;
@@ -157,7 +176,6 @@ public class Scanner {
                     }
                 break;
                 
-                // Estos son estados de aceptación//
                 case 2: case 6: case 8: case 11:
                     estado = 0;
                     i--;
@@ -169,7 +187,6 @@ public class Scanner {
                         estado = 6;
                         buffer.append(flujo);
                     }
-                    // Estado de aceptación
                     else {
                         estado = 0;
                         i--;    
@@ -195,7 +212,6 @@ public class Scanner {
                         estado = 11;
                         buffer.append(flujo);
                     }
-                    // Estado de aceptación
                     else {
                         estado = 0;
                         i--;
@@ -203,22 +219,150 @@ public class Scanner {
                     }
                 break;
                 
-                case 12: case 13: case 14: case 15:
-                     if(validarTrans(flujo, "=")){
-                        estado = 0;
+                case 20:
+                    if(validarTrans(flujo, "=")){
+                        estado = 21;
                         buffer.append(flujo);
-                     }
-                     else {
+                    }
+                    else{
                         estado = 0;
                         i--;
                         AgregarToken(buffer.toString());
-                      }
+                    }
                 break;
-                
-                default:
+                case 22:
+                    if(validarTrans(flujo, "=")){
+                        estado=23;
+                        buffer.append(flujo);
+                    }
+                    else{
+                        estado=0;
+                        i--;
+                        AgregaToken(buffer.toString(),Tipo_Token.NUMERO);
+                    }
+                break;
+                case 26:
+                    if(validarTrans(flujo, "=")){
+                        estado=27;
+                        buffer.append(flujo);
+                    }
+                    else{
+                        estado=0;
+                        i--;
+                        AgregaToken(buffer.toString(),Tipo_Token.LETRA);
+                    }
+                break;
+                case 24: 
+                        if(validarTrans(flujo,"=")){
+                          estado=25;
+                          buffer.append(flujo);
+                        }
+                        else{
+                            estado = 0;
+                            i--;
+                            AgregaToken(buffer.toString(), Tipo_Token.IDENTIFICADOR);
+                        }
+                 break;
+                case 30:
+                        if(validarTrans(flujo, "=")){
+                            estado=31;
+                            buffer.append(flujo);
+                        }
+                        else{
+                            estado=0;
+                            i--;
+                            AgregarToken(buffer.toString());
+                        }
+                break;
+                case 33:
+                    if(validarTrans(flujo, "=")){
+                        estado=34;
+                        buffer.append(flujo);
+                    }
+                    else{
+                        estado=0;
+                        i--;
+                        AgregarToken(buffer.toString());
+                    }
+                break;
+                case 35:
+                  if(validarTrans(flujo, "=")){
+                    estado=36;
+                    buffer.append(flujo);
+                }
+                else{
+                  estado=0;
+                  i--;
+                  AgregarToken(buffer.toString());
+                }
+              
+                break;
+                case 38:
+                if(validarTrans(flujo, "=")){
+                    estado=39;
+                    buffer.append(flujo);
+                }
+                else{
+                  estado=0;
+                  i--;
+                  AgregarToken(buffer.toString());
+                }
+                break;
+                case 31: case 34: case 36: case 39:
+                    if(validarTrans(flujo, "=")){
+                        estado = 40;
+                        buffer.append(flujo);
+                    }
+                    else {
+                        estado = 0;
+                        i--;
+                        AgregarToken(buffer.toString());
+                    }
+                break;
+                case 40:
+                    if(validarTrans(flujo, "=")){
+                        estado = 41;
+                        buffer.append(flujo);
+                    }
+                    else{
+                        estado=0;
+                        i--;
+                        AgregarToken(buffer.toString());
+                    }
+                break;
+                case 43:
+                    if(validarTrans(flujo, "=")){
+                      estado = 44;
+                      buffer.append(flujo);
+                    }
+                    else{
+                      estado=0;
+                      i--;
+                      AgregarToken(buffer.toString());
+                    }
+                break;
+                case 41: case 44: 
+                  if(validarTrans(flujo, "=")){
                     estado = 0;
+                    i--;
+                    AgregarToken(buffer.toString());
+                  }
                 break;
-            }
+            case 28:
+              if(validarTrans(flujo, "=")){
+                estado=29;
+                buffer.append(flujo);
+              }
+              else{
+                estado=0;
+                i--;
+                AgregaToken(buffer.toString(),Tipo_Token.NUEVAL);
+              }
+            break;
+                    default:
+                        estado = 0;
+                    break;
+                }
         }
         tokens.add(new Token(Tipo_Token.EOF, "", null, linea));
         return tokens;
@@ -228,4 +372,8 @@ public class Scanner {
         tokens.add(new Token(TokensConLexema.get(token),token, null,linea));
         buffer.delete(0, buffer.length());
   }
+    private void AgregaToken(String lexema, Tipo_Token Tipo_Token) {
+        tokens.add(new Token(Tipo_Token,lexema,null, linea));
+        buffer.delete(0, buffer.length());
+    }
 }

@@ -47,7 +47,7 @@ public enum Tipo_Token {
    LOGICO,
    IDENTIFICADOR,
    
-   
+   LETRA,
    SUMA,
    RESTA,
    MULTIPLICACION,
@@ -56,6 +56,7 @@ public enum Tipo_Token {
    MENOS_IGUAL,
    POR_IGUAL,
    DIV_IGUAL,
+   AMPERSAND,
   
    PARENTESIS_IZQ,
    PARENTESIS_DER,
@@ -66,6 +67,7 @@ public enum Tipo_Token {
    PUNTO_Y_COMA,
    LLAVE_DER,
    LLAVE_IZQ,
+   NUEVAL,
     // Final de cadena
     EOF
 }
